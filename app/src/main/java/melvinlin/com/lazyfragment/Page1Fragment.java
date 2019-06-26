@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class Page1Fragment extends Fragment {
+public class Page1Fragment extends BaseFragment {
 
     private static final String params = "params1";
     private String title;
@@ -124,5 +124,10 @@ public class Page1Fragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         Log.d("Test", "page1 >> onDetach()");
+    }
+
+    @Override
+    protected void Initialize() {
+        textView.setText(title);
     }
 }
