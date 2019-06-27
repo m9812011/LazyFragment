@@ -50,7 +50,6 @@ public class PlaceholderFragment3 extends BaseLazyFragment {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         mTextView = view.findViewById(R.id.section_label);
         mPb = view.findViewById(R.id.pb);
-        mViewInflateFinished = true;
 
         if (mLoadDataFinished) { // 一般情况下这时候数据请求都还没完成, 所以不会进这个if
             mTextView.setVisibility(View.VISIBLE);

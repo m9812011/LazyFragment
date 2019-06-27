@@ -10,21 +10,23 @@ import android.view.ViewGroup;
 
 public abstract class BaseLazyFragment extends Fragment {
 
-    protected boolean mLoadDataFinished;     // 表示数据是否已经请求完毕
-    protected boolean mViewInflateFinished;  // 表示找控件完成, 给控件们设置数据不会报空指针
+    protected boolean mLoadDataFinished;     // Fragment內的數據是否已經請求完畢
+    protected boolean mViewInflateFinished;  // Fragment的View加載完畢標示, 給控件們設置數據不會報空指針
+
     protected static final int TIME = 500;
     private View mRootView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // 控件已加載過
+        // 控件已inflater產生過
         if (mRootView != null) {
             return mRootView;
         }
 
         // 第一次進入加載控件，並標示已找控件完成
         mRootView = bindView(inflater, container, savedInstanceState);
+        mViewInflateFinished = true;
         return mRootView;
     }
 
