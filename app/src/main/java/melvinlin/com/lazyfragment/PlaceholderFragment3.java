@@ -2,49 +2,72 @@ package melvinlin.com.lazyfragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class Page3Fragment extends BaseFragment {
+public class PlaceholderFragment3 extends BaseLazyFragment {
 
-    private static final String params = "params3";
-    private String title;
-    private TextView textView;
+    private TextView mTextView;
+    private ProgressBar mPb;
+    private Handler mHandler = new Handler();
+    private String mData;
 
-    public static Page3Fragment newInstance(String title) {
-        Page3Fragment pageFragment = new Page3Fragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(params, title);
-        pageFragment.setArguments(bundle);
-        return pageFragment;
+    public PlaceholderFragment3() {
+    }
+
+    public static PlaceholderFragment3 newInstance() {
+        PlaceholderFragment3 fragment = new PlaceholderFragment3();
+        return fragment;
     }
 
     @Override
-    public void setInitialSavedState(@Nullable SavedState state) {
-        super.setInitialSavedState(state);
-        Log.d("Test", "page3 >> setInitialSavedState >> " + state.toString());
+    public void loadDataStart() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mData = "这是加载下来的数据";
+                // 一旦获取到数据, 就应该立刻标记数据加载完成
+                mLoadDataFinished = true;
+                if (mViewInflateFinished) {
+                    mTextView.setVisibility(View.VISIBLE);
+                    mTextView.setText(mData);
+                    mTextView.setText("这是改变后的数据");
+                    mPb.setVisibility(View.GONE);
+                }
+            }
+        }, TIME);
     }
 
-    // 判斷當前的Fragment是否正在顯示
+    @Override
+    protected View bindView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_category, container, false);
+        mTextView = view.findViewById(R.id.section_label);
+        mPb = view.findViewById(R.id.pb);
+        if (mLoadDataFinished) { // 一般情况下这时候数据请求都还没完成, 所以不会进这个if
+            mTextView.setVisibility(View.VISIBLE);
+            mTextView.setText(mData);
+            mPb.setVisibility(View.GONE);
+        }
+
+        return view;
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.d("Test", "page3 >> setUserVisibleHint >> " + isVisibleToUser);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-
-        Log.d("Test","page3 >> onHiddenChanged >> "+ hidden);
-    }
-
+    /**
+     * 驗證Fragment生命週期
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -54,20 +77,14 @@ public class Page3Fragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            title = getArguments().getString(params);
-        }
-
         Log.d("Test", "page3 >> onCreate()");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_page, container, false);
-        textView = view.findViewById(R.id.tv_page_test);
         Log.d("Test", "page3 >> onCreateView()");
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -123,10 +140,5 @@ public class Page3Fragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         Log.d("Test", "page3 >> onDetach()");
-    }
-
-    @Override
-    protected void Initialize() {
-        textView.setText(title);
     }
 }
