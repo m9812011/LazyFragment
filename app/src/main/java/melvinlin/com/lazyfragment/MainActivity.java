@@ -20,10 +20,10 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     initData();
+
     TabLayout tabLayout = findViewById(R.id.tablayout);
     ViewPager viewPager = findViewById(R.id.viewpager);
-    SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
-    viewPager.setAdapter(mSectionsPagerAdapter);
+    viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(), fragmentList, titles));
     // TabLayout綁定ViewPager
     tabLayout.setupWithViewPager(viewPager);
   }

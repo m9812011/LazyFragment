@@ -13,7 +13,6 @@ public abstract class BaseLazyFragment extends Fragment {
     protected boolean mLoadDataFinished;     // 表示数据是否已经请求完毕
     protected boolean mViewInflateFinished;  // 表示找控件完成, 给控件们设置数据不会报空指针
     protected static final int TIME = 500;
-    private boolean mHaveLoadData;           // 表示是否已经请求过数据
     private View mRootView;
 
     @Nullable
@@ -26,7 +25,6 @@ public abstract class BaseLazyFragment extends Fragment {
 
         // 第一次進入加載控件，並標示已找控件完成
         mRootView = bindView(inflater, container, savedInstanceState);
-        mViewInflateFinished = true;
         return mRootView;
     }
 
@@ -35,9 +33,8 @@ public abstract class BaseLazyFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         // 如果还没有加载过数据 && 用户切换到了这个fragment
         // 那就开始加载数据
-        if (!mHaveLoadData && isVisibleToUser) {
+        if (!mLoadDataFinished && isVisibleToUser) {
             loadDataStart();
-            mHaveLoadData = true;
         }
     }
 
